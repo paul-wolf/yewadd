@@ -132,7 +132,8 @@ def ls(ctx, spec, query_exclude):
 @click.pass_context
 @click.argument("uid", required=True)
 def exclude(ctx, uid):
-    """List address entries with search spec."""
+    """Tell us to not include the record with uid in future 
+    listings."""
     
     cur = conn.cursor()
     cur.execute(SQL_BY_UID, [uid])
@@ -142,6 +143,29 @@ def exclude(ctx, uid):
     for k, v in addresses.items():
         print_address_dict(v)
     
+# stats
+
+# include
+
+@cli.command()
+@click.pass_context
+def info(ctx):
+    """Print simple stats."""
+    
+    cur = conn.cursor()
+    sql = """SELECT count(*) as cnt FROM ZABCDRECORD
+        WHERE z_pk NOT IN (SELECT uid FROM exclude_list)"""
+    cur.execute(sql)
+    # ipdb.set_trace()
+    cnt = cur.fetchone()["cnt"]
+    print(f"Total records not excluded: {cnt}")
+    sql = """SELECT count(*) as cnt FROM exclude_list"""
+    cur.execute(sql)
+    cnt = cur.fetchone().get("cnt")
+    print(f"Total records excluded: {cnt}")
+
+    
+
 
 if __name__ == "__main__":
     cli()
