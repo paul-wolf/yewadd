@@ -1,0 +1,16 @@
+requests
+Click
+dateparser
+pydantic
+humanize
+s3fs
+arrow
+environs
+hypothesis[zoneinfo]
+pytest
+black
+flake8
+mypy
+isort
+ipdb
+ipython
